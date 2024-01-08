@@ -13,7 +13,7 @@ import {
     UnlikeLogo,
 } from "../../assets/constants";
 
-const FeedPostFooter = ({username}) => {
+const FeedPostFooter = ({ username, isProfilePic }) => {
     const [liked, setLiked] = useState(false);
     const [numberOfLikes, setNumberOfLikes] = useState(0);
     const [comment, setComment] = useState("");
@@ -30,15 +30,15 @@ const FeedPostFooter = ({username}) => {
     };
 
     const HandlePost = () => {
-        if (comment !== ""){
+        if (comment !== "") {
             // setComment(comment);
             setNumberOfComments(numberOfComments + 1);
-            setComment("")
+            setComment("");
         }
-    }
+    };
     return (
-        <Box mb={10}>
-            <Flex alignItems={"center"} w={"full"} mt={2} mb={2} pt={0} gap={4}>
+        <Box mb={10} marginTop={"auto"}>
+            <Flex alignItems={"center"} w={"full"} mt={4} mb={2} pt={0} gap={4}>
                 <Box onClick={handleLikes} cursor={"pointer"} fontSize={18}>
                     {!liked ? <NotificationsLogo /> : <UnlikeLogo />}
                 </Box>
@@ -49,15 +49,19 @@ const FeedPostFooter = ({username}) => {
             <Text fontWeight={600} fontSize={"sm"}>
                 {numberOfLikes} Likes
             </Text>
-            <Text fontWeight={700} fontSize={"sm"}>
-                {username}{" "}
-                <Text as={"span"} fontWeight={400}>
-                    Feeling Good
-                </Text>
-            </Text>
-            <Text fontSize={"sm"} color={"gray"}>
-                View all {numberOfComments} Comments
-            </Text>
+            {!isProfilePic && (
+                <>
+                    <Text fontWeight={700} fontSize={"sm"}>
+                        {username}{" "}
+                        <Text as={"span"} fontWeight={400}>
+                            Feeling Good
+                        </Text>
+                    </Text>
+                    <Text fontSize={"sm"} color={"gray"}>
+                        View all {numberOfComments} Comments
+                    </Text>
+                </>
+            )}
             <Flex justifyContent={"space-between"} gap={2}>
                 <InputGroup>
                     <Input

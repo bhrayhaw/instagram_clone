@@ -3,8 +3,14 @@ import React from "react";
 import ProfileHeader from "../../components/ProfilePosts/ProfileHeader";
 import ProfileTabs from "../../components/ProfilePosts/ProfileTabs";
 import ProfilePosts from "../../components/ProfilePosts/ProfilePosts";
+import { useParams } from "react-router-dom";
+import useGetUserProfileByUsername from "../../hooks/useGetUserProfileByUsername";
 
 const Profilepage = () => {
+    const {username } = useParams()
+    const {isLoading, userProfile } = useGetUserProfileByUsername(username)
+
+    const userNotFound = !isLoading && !userProfile
     return (
         <Container maxW={"container.lg"} py={5}>
             <Flex

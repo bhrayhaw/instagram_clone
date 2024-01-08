@@ -1,35 +1,11 @@
 import { useState } from "react";
-import {
-    Box,
-    Button,
-    Image,
-    Input,
-    VStack,
-    Flex,
-    Text,
-} from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { Box, Image, VStack, Flex, Text } from "@chakra-ui/react";
+import Login from "./Login";
+import Signup from "./Signup";
+import GoogleAuth from "./GoogleAuth";
 
 const AuthForm = () => {
     const [isLogin, setIsLogin] = useState(true);
-    const navigate = useNavigate()
-    const [inputs, setInputs] = useState({
-        email: "",
-        password: "",
-        confirmpassword: "",
-    });
-
-    const SignUpLoginChangeHandler = () => {
-        setIsLogin(!isLogin);
-    };
-
-    const AuthenticationHandler = () => {
-        if (!inputs.email || !inputs.password){
-            alert("Please fill out the fields")
-            return
-        }
-        navigate("/")
-    };
 
     return (
         <>
@@ -41,48 +17,7 @@ const AuthForm = () => {
                         cursor={"pointer"}
                         alt="Instagram logo"
                     />
-                    <Input
-                        placeholder="Email"
-                        fontSize={14}
-                        type="email"
-                        value={inputs.email}
-                        onChange={(e) =>
-                            setInputs({ ...inputs, email: e.target.value })
-                        }
-                    />
-                    <Input
-                        placeholder="Password"
-                        fontSize={14}
-                        type="password"
-                        value={inputs.password}
-                        onChange={(e) =>
-                            setInputs({ ...inputs, password: e.target.value })
-                        }
-                    />
-                    {!isLogin ? (
-                        <Input
-                            placeholder="Confirm Password"
-                            fontSize={14}
-                            type="password"
-                            value={inputs.confirmpassword}
-                            onChange={(e) =>
-                                setInputs({
-                                    ...inputs,
-                                    confirmpassword: e.target.value,
-                                })
-                            }
-                        />
-                    ) : null}
-
-                    <Button
-                        w={"full"}
-                        colorScheme="blue"
-                        size={"sm"}
-                        fontSize={"14"}
-                        onClick={AuthenticationHandler}
-                    >
-                        {isLogin ? "Login" : "Sign Up"}
-                    </Button>
+                    {isLogin ? <Login /> : <Signup />}
 
                     <Flex
                         justifyContent={"center"}
@@ -95,17 +30,10 @@ const AuthForm = () => {
                         <Text fontSize={14} mx={1}>
                             OR
                         </Text>
+
                         <Box flex={2} h={"1px"} bg={"gray.400"}></Box>
                     </Flex>
-
-                    <Flex alignItems={"center"} justifyContent={"center"}>
-                        <Image w={5} src="/google.png" alt="Google Logo" />
-                        <Text mx={2} cursor={"pointer"} fontSize={14}>
-                            {isLogin
-                                ? "Log In with Google"
-                                : "Sign Up with Google"}
-                        </Text>
-                    </Flex>
+                    <GoogleAuth prefix={isLogin?"Log In":"Sign Up"}/>
                 </VStack>
             </Box>
 
@@ -116,13 +44,7 @@ const AuthForm = () => {
                             ? "Already have an account"
                             : "Don't have an account"}
                     </Box>
-                    <Box
-                        fontSize={14}
-                        cursor={"pointer"}
-                        mx={2}
-                        color={"blue"}
-                        onClick={SignUpLoginChangeHandler}
-                    >
+                    <Box fontSize={14} cursor={"pointer"} mx={2} color={"blue"} onClick={() => {setIsLogin(!isLogin)}}>
                         {!isLogin ? "Login" : "Sign Up"}
                     </Box>
                 </Flex>
