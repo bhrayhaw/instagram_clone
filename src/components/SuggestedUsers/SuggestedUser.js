@@ -1,45 +1,58 @@
 import { Avatar, Box, Button, Flex, VStack } from "@chakra-ui/react";
-import React, { useState } from "react";
+import useFollowAndUnFollowUser from "../../hooks/useFollowAndUnFollowUser";
+import useAuthStore from "../../store/AuthStore";
+import { Link } from "react-router-dom";
 
-const SuggestedUser = ({ followers, name, avatar }) => {
-    const [isFollowed, setIsFollowed] = useState(false);
-    const [numberOfFollowers, setNumberOfFollowers] = useState(0);
+const SuggestedUser = ({ user, setUser }) => {
+    const { isFollowing, isUpdating, handleFollowUser } =
+        useFollowAndUnFollowUser(user?.uid);
+    const authUser = useAuthStore((state) => state.user);
 
-    const HandleFollow = () => {
-        if (isFollowed) {
-            setIsFollowed(false);
-            setNumberOfFollowers(numberOfFollowers - 1);
-            return;
-        }
-        setIsFollowed(true);
-        setNumberOfFollowers(numberOfFollowers + 1);
+    const onFollowUser = async () => {
+        await handleFollowUser();
+        setUser({
+            ...user,
+            followers: isFollowing
+                ? user?.followers.filter(
+                      (follower) => follower.uid !== authUser.uid
+                  )
+                : [...user?.followers, authUser],
+        });
     };
+
     return (
         <Flex justifyContent={"space-between"} alignItems={"center"} w={"full"}>
             <Flex alignItems={"center"} gap={2}>
-                <Avatar src={avatar} size={"md"} name={name} />
+                <Link to={`/${user?.username}`}>
+                    <Avatar src={user?.profilePicURL} size={"md"} />
+                </Link>
                 <VStack spacing={2} alignItems={"flex-start"}>
-                    <Box fontSize={12} fontWeight={"bold"}>
-                        {name}
-                    </Box>
+                    <Link to={`/${user?.username}`}>
+                        <Box fontSize={12} fontWeight={"bold"}>
+                            {user?.username}
+                        </Box>
+                    </Link>
                     <Box fontSize={11} color={"gray.500"}>
-                        {followers + numberOfFollowers} followers
+                        {user?.followers.length} followers
                     </Box>
                 </VStack>
             </Flex>
-            <Button
-                onClick={HandleFollow}
-                bg={"transparent"}
-                fontSize={13}
-                p={0}
-                h={"max-content"}
-                fontWeight={"medium"}
-                cursor={"pointer"}
-                color={"blue.500"}
-                _hover={{color: "white"}}
-            >
-                {isFollowed ? "UnFollow" : "Follow"}
-            </Button>
+            {authUser.uid !== user?.uid && (
+                <Button
+                    fontSize={13}
+                    bg={"transparent"}
+                    p={0}
+                    h={"max-content"}
+                    fontWeight={"medium"}
+                    color={"blue.400"}
+                    cursor={"pointer"}
+                    _hover={{ color: "white" }}
+                    onClick={onFollowUser}
+                    isLoading={isUpdating}
+                >
+                    {isFollowing ? "Unfollow" : "Follow"}
+                </Button>
+            )}
         </Flex>
     );
 };

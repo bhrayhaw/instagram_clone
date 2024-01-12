@@ -7,11 +7,10 @@ import { Link } from "react-router-dom";
 const SuggestedUsersHeader = () => {
     const { HandleLogout, isLoggingOut } = useLogout();
     const authUser = useAuthStore((state) => state.user);
-    console.log(authUser);
     return (
         <Flex justifyContent={"space-between"} alignItems={"center"} w={"full"}>
             <Link to={`${authUser?.username}`}>
-                <Avatar src={authUser?.profilePicUrl} size={"lg"} />
+                <Avatar src={authUser?.profilePicURL} size={"lg"} />
             </Link>
             <Link to={`${authUser?.username}`}>
                 <Text fontSize={12} fontWeight={400}>

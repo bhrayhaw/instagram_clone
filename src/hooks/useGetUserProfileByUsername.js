@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useShowToast from "./useShowToast";
 import useUserProfileStore from "../store/UserProfileStore";
 import { collection, getDocs, query, where } from "firebase/firestore";
@@ -25,6 +25,8 @@ const useGetUserProfileByUsername = (username) => {
                 setUserProfile(userDoc);
             } catch (error) {
                 showToast("Error", error.message, "error");
+            } finally {
+                setIsLoading(false);
             }
         };
         getUserProfile();
